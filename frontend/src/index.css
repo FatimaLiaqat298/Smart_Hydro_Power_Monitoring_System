@@ -1,0 +1,634 @@
+/* ============================================================
+   SHPMFS Global Styles — Slate, Mint and Teal Dusk Theme
+   Design token CSS variables + Tailwind directives
+   ============================================================ */
+
+/* ── 1. Local font (no CDN) ── */
+@import '@fontsource-variable/inter';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── 2. Unified Token Set (CSS Custom Properties) ───────────── */
+:root {
+  /* ── Background & Aurora Glows ── */
+  --bg-page-gradient: linear-gradient(135deg, #5B9BBE, #3E9FA6 50%, #6E8FD8);
+  --glow-mint: rgba(182, 227, 214, 0.40);
+  --glow-periwinkle: rgba(140, 132, 224, 0.38);
+  --glow-aqua: rgba(220, 239, 239, 0.42);
+
+  /* ── Frosted Glass Cards & Surfaces ── */
+  --card-alpha: 0.34;
+  --card-bg: rgba(255, 255, 255, var(--card-alpha));
+  --card-blur: 14px;
+  --card-border: rgba(255, 255, 255, 0.60);
+  --card-radius: 14px;
+  --card-shadow: 0 8px 24px -4px rgba(11, 37, 69, 0.08), 0 2px 6px -1px rgba(11, 37, 69, 0.04);
+  --card-hover-alpha: 0.42;
+
+  /* ── Text on Glass (Navy Hierarchy: Contrast >= 4.5:1) ── */
+  --color-navy: #0B2545;       /* Headings, high emphasis (> 7:1) */
+  --color-navy-body: #143552;  /* Body, values, secondary (> 5.5:1) */
+  --color-navy-muted: #1B4360; /* Labels, subtitles (> 4.6:1) */
+  --color-text: #0B2545;
+  --color-heading: #0B2545;
+  --color-secondary: #143552;
+  --color-muted: #1B4360;
+
+  /* ── Inputs / Selects / Pickers / Dropdowns / Tooltips ── */
+  --input-bg: rgba(255, 255, 255, 0.50);
+  --input-text: #0B2545;
+  --input-border: rgba(255, 255, 255, 0.70);
+  --input-focus-ring: #2F9E9A;
+  --dropdown-bg: #E6F4F2;
+  --dropdown-text: #0B2545;
+  --tooltip-bg: #E6F4F2;
+  --tooltip-border: #2F9E9A;
+  --tooltip-text: #0B2545;
+
+  /* ── Sidebar & Top Bar ── */
+  --bar-start: #24607F;
+  --bar-end: #2A7690;
+  --bar-text: #FFFFFF;
+  --bar-active-mint: #B6E3D6;
+
+  /* ── Primary Buttons ── */
+  --btn-primary-start: #2B6CB0;
+  --btn-primary-end: #23807F;
+  --btn-primary-text: #FFFFFF;
+
+  /* ── Status Pills (tinted fills with dark text >= 4.5:1) ── */
+  --status-running-bg: rgba(182, 227, 214, 0.70);
+  --status-running-border: rgba(11, 61, 30, 0.35);
+  --status-running-text: #0B3D1E;
+
+  --status-partial-bg: rgba(254, 243, 199, 0.85);
+  --status-partial-border: rgba(74, 37, 3, 0.35);
+  --status-partial-text: #4A2503;
+
+  --status-shutdown-bg: rgba(254, 226, 226, 0.85);
+  --status-shutdown-border: rgba(90, 15, 15, 0.35);
+  --status-shutdown-text: #5A0F0F;
+
+  /* ── Tables ── */
+  --table-header-bg: rgba(255, 255, 255, 0.38);
+  --table-header-text: #0B2545;
+  --table-row-hover: rgba(255, 255, 255, 0.24);
+  --table-border: rgba(11, 37, 69, 0.10);
+  --table-text: #0B2545;
+
+  /* ── Charts ── */
+  --chart-grid: rgba(11, 37, 69, 0.18);
+  --chart-axis-text: #143552;
+  --chart-tooltip-bg: #E6F4F2;
+  --chart-tooltip-border: #2F9E9A;
+  --chart-tooltip-text: #0B2545;
+
+  /* ── Shared Radius ── */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.875rem; /* 14px */
+  --radius-xl: 1rem;
+}
+
+/* ── 3. Base Reset & Fixed Background ───────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    height: 100%;
+  }
+
+  body {
+    font-family: 'InterVariable', 'Inter', system-ui, sans-serif;
+    background: linear-gradient(135deg, #5B9BBE, #3E9FA6 50%, #6E8FD8) fixed;
+    color: #0B2545;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    font-variant-numeric: tabular-nums;
+    position: relative;
+    min-height: 100vh;
+  }
+
+  /* Fixed soft glows: mint #B6E3D6, periwinkle #8C84E0, pale aqua #DCEFEF at 35-45% */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 18% 22%, rgba(182, 227, 214, 0.42) 0%, transparent 42%),
+      radial-gradient(circle at 82% 28%, rgba(140, 132, 224, 0.38) 0%, transparent 48%),
+      radial-gradient(circle at 48% 78%, rgba(220, 239, 239, 0.44) 0%, transparent 46%);
+    pointer-events: none;
+    z-index: 0;
+    animation: glow-drift 24s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow-drift {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(25px, -20px) scale(1.06); }
+    100% { transform: translate(-18px, 16px) scale(0.98); }
+  }
+
+  td, th, .num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid #2F9E9A;
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+}
+
+/* ── 4. Component Layer ─────────────────────────────────────── */
+@layer components {
+
+  /* ─── Frosted Glass Card ─ */
+  .card {
+    background: rgba(255, 255, 255, var(--card-alpha, 0.34));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.60);
+    border-radius: 14px;
+    padding: 1.25rem;
+    box-shadow: 0 8px 24px -4px rgba(11, 37, 69, 0.08), 0 2px 6px -1px rgba(11, 37, 69, 0.04);
+    position: relative;
+    color: #0B2545;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .card:hover {
+    --card-alpha: 0.42;
+    background: rgba(255, 255, 255, 0.42);
+    border-color: rgba(255, 255, 255, 0.80);
+    box-shadow: 0 12px 28px -4px rgba(11, 37, 69, 0.12);
+  }
+
+  /* ─── Primary Button (gradient #2B6CB0 to #23807F, white text) ─── */
+  .btn-primary {
+    background: linear-gradient(135deg, #2B6CB0 0%, #23807F 100%);
+    color: #FFFFFF;
+    height: 2.25rem;
+    padding: 0.375rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    letter-spacing: 0.025em;
+    border: 1px solid rgba(255, 255, 255, 0.30);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    box-shadow: 0 4px 14px rgba(35, 128, 127, 0.30);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #245a94 0%, #1c6867 100%);
+    box-shadow: 0 6px 18px rgba(35, 128, 127, 0.40);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled {
+    opacity: 0.50;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* ─── Secondary button ─── */
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.50);
+    color: #0B2545;
+    height: 2.25rem;
+    padding: 0.375rem 1rem;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    border: 1px solid rgba(255, 255, 255, 0.70);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.75);
+    border-color: #2F9E9A;
+    color: #23807F;
+  }
+
+  /* ─── Danger button ─── */
+  .btn-danger {
+    background-color: #5A0F0F;
+    color: #FFFFFF;
+    height: 2.25rem;
+    padding: 0.375rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    letter-spacing: 0.025em;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s, transform 0.15s;
+    box-shadow: 0 4px 14px rgba(90, 15, 15, 0.25);
+  }
+  .btn-danger:hover:not(:disabled) {
+    background-color: #450b0b;
+    transform: translateY(-1px);
+  }
+
+  /* ─── Inputs, Selects, Date Pickers ─── */
+  .input-field {
+    width: 100%;
+    height: 2.25rem;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.70);
+    border-radius: var(--radius-md);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    outline: none;
+    background: rgba(255, 255, 255, 0.50);
+    color: #0B2545;
+    transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+    font-variant-numeric: tabular-nums;
+  }
+  .input-field::placeholder {
+    color: #1B4360;
+    opacity: 0.65;
+  }
+  .input-field:focus {
+    background: rgba(255, 255, 255, 0.70);
+    border-color: #2F9E9A;
+    box-shadow: 0 0 0 2px #2F9E9A;
+  }
+  .input-field option {
+    background: #E6F4F2;
+    color: #0B2545;
+  }
+  .input-field.error {
+    border-color: #5A0F0F;
+    box-shadow: 0 0 0 2px rgba(90, 15, 15, 0.30);
+  }
+
+  /* ─── Table (header rgba(255,255,255,.38), row hover rgba(255,255,255,.24)) ─── */
+  .table-aurora {
+    width: 100%;
+    text-align: left;
+    font-size: 0.75rem;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: #0B2545;
+  }
+  .table-aurora thead th {
+    position: sticky;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.38);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #0B2545;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.625rem 0.75rem;
+    border-bottom: 1px solid rgba(11, 37, 69, 0.12);
+    z-index: 10;
+    white-space: nowrap;
+  }
+  .table-aurora tbody tr {
+    transition: background-color 0.15s ease;
+  }
+  .table-aurora tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.24);
+  }
+  .table-aurora tbody td {
+    padding: 0.625rem 0.75rem;
+    border-bottom: 1px solid rgba(11, 37, 69, 0.08);
+    color: #0B2545;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .table-aurora td.num,
+  .table-aurora th.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ─── Label ─── */
+  .label {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #143552;
+    margin-bottom: 0.375rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+
+  /* ─── Status Badges / Pills (tinted fills with dark text >= 4.5:1) ─── */
+  .badge-running {
+    background: rgba(182, 227, 214, 0.70);
+    border: 1px solid rgba(11, 61, 30, 0.35);
+    color: #0B3D1E;
+    font-size: 0.5625rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    padding: 0.2rem 0.625rem;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .badge-partial {
+    background: rgba(254, 243, 199, 0.85);
+    border: 1px solid rgba(74, 37, 3, 0.35);
+    color: #4A2503;
+    font-size: 0.5625rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    padding: 0.2rem 0.625rem;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .badge-shutdown {
+    background: rgba(254, 226, 226, 0.85);
+    border: 1px solid rgba(90, 15, 15, 0.35);
+    color: #5A0F0F;
+    font-size: 0.5625rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    padding: 0.2rem 0.625rem;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  /* ─── Dropdowns & Tooltips (#E6F4F2) ─── */
+  .dropdown-glass {
+    background: #E6F4F2;
+    border: 1px solid #2F9E9A;
+    color: #0B2545;
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 25px rgba(11, 37, 69, 0.12);
+  }
+  .tooltip-glass {
+    background: #E6F4F2;
+    border: 1px solid #2F9E9A;
+    color: #0B2545;
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 20px rgba(11, 37, 69, 0.12);
+  }
+
+  /* ─── Modal Surface ─── */
+  .modal-glass {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.80);
+    border-radius: 14px;
+    box-shadow: 0 20px 45px -10px rgba(11, 37, 69, 0.20);
+    color: #0B2545;
+  }
+
+  /* ─── Glow Utilities ─── */
+  .glow-mint    { box-shadow: 0 0 16px 2px rgba(182, 227, 214, 0.40); }
+  .glow-teal    { box-shadow: 0 0 16px 2px rgba(47, 158, 154, 0.30); }
+  .glow-primary { box-shadow: 0 0 16px 2px rgba(43, 108, 176, 0.30); }
+
+  /* ─── Skeleton Loader ─── */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.25) 25%,
+      rgba(255, 255, 255, 0.45) 50%,
+      rgba(255, 255, 255, 0.25) 75%
+    );
+    background-size: 800px 100%;
+    animation: skeleton-shimmer 1.4s ease-in-out infinite;
+    border-radius: var(--radius-md);
+  }
+  @keyframes skeleton-shimmer {
+    0%   { background-position: -800px 0; }
+    100% { background-position: 800px 0; }
+  }
+
+  /* ─── Empty state ─── */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    gap: 0.75rem;
+    color: #1B4360;
+  }
+  .empty-state svg { opacity: 0.7; }
+  .empty-state p { font-size: 0.8125rem; font-weight: 600; }
+
+  /* ─── Error state ─── */
+  .error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    gap: 0.75rem;
+    color: #5A0F0F;
+  }
+  .error-state p { font-size: 0.8125rem; font-weight: 700; }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+  .field-error {
+    font-size: 0.6875rem;
+    color: #5A0F0F;
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 700;
+  }
+
+  .estimate-note {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.6875rem;
+    color: #1B4360;
+    font-style: italic;
+    padding: 0.25rem 0;
+  }
+
+  /* ─── Recharts Tooltip (#E6F4F2, border #2F9E9A, text #0B2545) ─── */
+  .recharts-tooltip-wrapper .recharts-default-tooltip {
+    background-color: #E6F4F2 !important;
+    border: 1px solid #2F9E9A !important;
+    border-radius: var(--radius-md) !important;
+    font-size: 0.75rem !important;
+    color: #0B2545 !important;
+    box-shadow: 0 10px 25px rgba(11, 37, 69, 0.15) !important;
+  }
+}
+
+/* ── 5. Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar          { width: 6px; height: 6px; }
+::-webkit-scrollbar-track    { background: rgba(255, 255, 255, 0.15); }
+::-webkit-scrollbar-thumb    { background: rgba(11, 37, 69, 0.25); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(11, 37, 69, 0.40); }
+
+.thin-scrollbar::-webkit-scrollbar          { width: 4px; height: 4px; }
+.thin-scrollbar::-webkit-scrollbar-track    { background: transparent; }
+.thin-scrollbar::-webkit-scrollbar-thumb    { background: rgba(255, 255, 255, 0.30); border-radius: 2px; }
+.thin-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.50); }
+.thin-scrollbar { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.30) transparent; }
+
+/* ── 6. Animations ─────────────────────────────────────────── */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn { animation: fade-in 0.25s ease-out both; }
+
+/* ── 7. Respect prefers-reduced-motion ─────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  body::before { animation: none !important; }
+  .skeleton { animation: none !important; }
+}
+
+.table-scroll-wrap {
+  overflow-x: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Keep foreground text readable on the light glass surfaces used in dashboard content. */
+main[role="main"] :is(.bg-card, .bg-hull).text-white,
+main[role="main"] :is(.bg-card, .bg-hull) .text-white {
+  color: #0B2545;
+}
+
+main[role="main"] :is(.bg-card, .bg-hull) :is(.text-gray-300, .text-gray-400, .text-gray-500, .text-gray-600) {
+  color: #1B4360;
+}
+
+main[role="main"] :is(.bg-card, .bg-hull) .text-pedo-accent {
+  color: #1E6F7A;
+}
+
+main[role="main"] :is(.bg-card, .bg-hull) .text-emerald-400 {
+  color: #0B3D1E;
+}
+
+main[role="main"] :is(.bg-card, .bg-hull) :is(.text-red-300, .text-red-400) {
+  color: #5A0F0F;
+}
+
+main[role="main"] :is(.bg-pedo-primary, .btn-primary, .bg-emerald-500).text-white {
+  color: #FFFFFF;
+}
+
+main[role="main"] select {
+  background-color: #E6F4F2;
+  color: #0B2545;
+  border-color: #2F9E9A;
+}
+
+main[role="main"] select option {
+  background-color: #E6F4F2;
+  color: #0B2545;
+}
+
+/* ── 8. Dashboard Layout Responsive Grid ──────────────────── */
+.dash-main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 1100px) and (max-width: 1499px) {
+  .dash-main-grid {
+    grid-template-columns: minmax(0, 2.4fr) minmax(0, 1fr);
+    gap: 16px;
+  }
+  .dash-col-avg-gen {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .dash-col-efficiency {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .dash-col-inflow {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .dash-col-monthly {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .dash-col-status {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+}
+
+@media (min-width: 1500px) {
+  .dash-main-grid {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 0.62fr) minmax(0, 1.3fr);
+    grid-template-rows: auto auto;
+    gap: 16px;
+  }
+  .dash-col-avg-gen {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .dash-col-inflow {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .dash-col-efficiency {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .dash-col-monthly {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .dash-col-status {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  body { overflow-x: hidden; }
+}
+
+.dash-main-grid > * { min-width: 0; }

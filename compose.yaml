@@ -1,0 +1,37 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: backend
+    env_file:
+      - ./backend/.env
+    environment:
+      MAILER_URL: http://mailer:8025
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mailer
+
+  mailer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: mailer
+    env_file:
+      - ./backend/.env
+    environment:
+      MAILER_HOST: 0.0.0.0
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: frontend
+      args:
+        NEXT_PUBLIC_API_URL: /api/v1
+        BACKEND_INTERNAL_URL: http://backend:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
